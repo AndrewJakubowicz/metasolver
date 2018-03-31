@@ -36,10 +36,10 @@ pub trait Neighbours<T: Iterator<Item = Self::Neighbour>> {
 ///
 /// If the solution hasn't experienced enough diversity, the
 /// temperature can be increased.
-/// 
+///
 /// This trait can also be used to count iterations of the algorithm
 /// and stop the algorithm at a certain iteration limit.
-/// 
+///
 /// You can also stop the algorithm after a period of time without
 /// any improvement to the solution.
 pub trait Temperature<T> {
@@ -58,11 +58,11 @@ pub trait Temperature<T> {
 /// Traditional simulated annealing algorithm.
 /// Algorithm 2.1, from text "Metaheuristics, from design to implementation".
 ///
+/// Todo: Make the function remember the best value to return.
 pub fn simulated_annealing<T, V, U, N>(
     intial_solution: T,
     initial_temperature: V,
     acceptance: U,
-    max_loop: u32,
 ) -> Option<T>
 where
     T: Fitness + Clone + Neighbours<N>,
@@ -73,7 +73,13 @@ where
     let mut s = intial_solution;
     let mut t = initial_temperature;
     let mut old_fitness = s.fitness();
-    for _ in 0..max_loop {
+    let mut best_solution = s.clone();
+    let mut best_fitness = old_fitness;
+    loop {
+        if t.stop() {
+            return Some(best_solution);
+        }
+
         let (new_fitness, n) = {
             let mut iter = s.neighbours();
             loop {
@@ -88,22 +94,19 @@ where
                     {
                         break (new_fitness, n);
                     }
-
-                    if t.stop() {
-                        return Some(s);
-                    }
                 } else {
                     // No more neighbours so return best answer.
-                    return Some(s);
+                    return Some(best_solution);
                 }
             }
         };
         s.apply_neighbour(n);
         t = t.update(&s);
-        old_fitness = new_fitness;
-        if old_fitness == 0.0 {
-            return Some(s);
+        if new_fitness < best_fitness {
+            best_solution = s.clone();
+            best_fitness = new_fitness;
         }
+        old_fitness = new_fitness;
+        
     }
-    Some(s)
 }
