@@ -2,6 +2,7 @@ extern crate rand;
 
 pub mod simulated_annealing;
 
+
 pub fn a() -> i32 {
     2
 }

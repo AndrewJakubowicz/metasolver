@@ -1,6 +1,9 @@
+//! Provides the traits required for the simulated annealing algorithm
+//! as well as some cooling schedules.
 use rand::{thread_rng, Rng};
 
 pub mod cooling_schedules;
+pub mod acceptance;
 
 /// Returns a fitness.
 /// The lower the number the better.
@@ -33,6 +36,12 @@ pub trait Neighbours<T: Iterator<Item = Self::Neighbour>> {
 ///
 /// If the solution hasn't experienced enough diversity, the
 /// temperature can be increased.
+/// 
+/// This trait can also be used to count iterations of the algorithm
+/// and stop the algorithm at a certain iteration limit.
+/// 
+/// You can also stop the algorithm after a period of time without
+/// any improvement to the solution.
 pub trait Temperature<T> {
     /// Updates the temperature, allowing you to move the temperature.
     /// The reference to the solution allows non-monotonic cooling schedules.
