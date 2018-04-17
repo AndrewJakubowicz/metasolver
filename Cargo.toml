@@ -1,7 +1,7 @@
 [package]
-name = "tsp_solver"
-version = "0.1.0"
-authors = ["andre <spyr1014@gmail.com>"]
+name = "metasolver"
+version = "0.0.1"
+authors = ["andrew <spyr1014@gmail.com>"]
 
 [dependencies]
 rand = "0.4.2"

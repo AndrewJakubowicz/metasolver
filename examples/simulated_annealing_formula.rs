@@ -1,10 +1,10 @@
-extern crate tsp_solver;
+extern crate metasolver;
 
 extern crate rand;
 
-use tsp_solver::simulated_annealing::acceptance::boltzmann;
-use tsp_solver::simulated_annealing::cooling_schedules;
-use tsp_solver::simulated_annealing::{simulated_annealing, Fitness, Neighbours};
+use metasolver::simulated_annealing::acceptance::boltzmann;
+use metasolver::simulated_annealing::cooling_schedules;
+use metasolver::simulated_annealing::{simulated_annealing, Fitness, Neighbours};
 
 use rand::{thread_rng, Rng};
 
@@ -29,7 +29,7 @@ impl Iterator for solution_formula {
 impl Fitness for solution_formula {
     fn fitness(&self) -> f32 {
         let x = self.min_x as f32;
-        
+
         let fit = x.powi(3) - 60.0 * x.powi(2) + 900.0 * x + 100.0;
         -1.0 * fit
     }
@@ -52,10 +52,14 @@ impl Neighbours<Self> for solution_formula {
 }
 
 fn main() {
-    println!("Min solution found: {:?}",
-    simulated_annealing(
-        solution_formula { min_x: thread_rng().gen_range(0, 17) },
-        cooling_schedules::Geometric::new(800.0, 0.99, 0.001),
-        boltzmann,
-    ).expect("Solution failed"));
+    println!(
+        "Min solution found: {:?}",
+        simulated_annealing(
+            solution_formula {
+                min_x: thread_rng().gen_range(0, 17)
+            },
+            cooling_schedules::Geometric::new(800.0, 0.99, 0.001),
+            boltzmann,
+        ).expect("Solution failed")
+    );
 }

@@ -2,8 +2,8 @@
 //! as well as some cooling schedules.
 use rand::{thread_rng, Rng};
 
-pub mod cooling_schedules;
 pub mod acceptance;
+pub mod cooling_schedules;
 
 /// Returns a fitness.
 /// The lower the number the better.
@@ -57,8 +57,8 @@ pub trait Temperature<T> {
 
 /// Traditional simulated annealing algorithm.
 /// Algorithm 2.1, from text "Metaheuristics, from design to implementation".
-///
-/// Todo: Make the function remember the best value to return.
+/// The neighbour is exhaustively checked in order, choosing the first
+/// neighbour to be accepted by the acceptance function.
 pub fn simulated_annealing<T, V, U, N>(
     intial_solution: T,
     initial_temperature: V,
@@ -73,6 +73,7 @@ where
     let mut s = intial_solution;
     let mut t = initial_temperature;
     let mut old_fitness = s.fitness();
+
     let mut best_solution = s.clone();
     let mut best_fitness = old_fitness;
     loop {
@@ -107,6 +108,5 @@ where
             best_fitness = new_fitness;
         }
         old_fitness = new_fitness;
-        
     }
 }
