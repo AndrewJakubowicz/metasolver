@@ -2,6 +2,9 @@
 name = "metasolver"
 version = "0.0.1"
 authors = ["andrew <spyr1014@gmail.com>"]
+description = "Meta heuristics library for those hard problems."
+license = "MIT"
+
 
 [dependencies]
 rand = "0.4.2"
